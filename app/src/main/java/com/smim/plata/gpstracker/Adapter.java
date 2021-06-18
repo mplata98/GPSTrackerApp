@@ -47,15 +47,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
             holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.teal_200));
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int previous = selected;
-                selected = position;
-                notifyItemChanged(previous);
-                notifyItemChanged(position);
-                historyFragment.setMap(selected);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            int previous = selected;
+            selected = position;
+            notifyItemChanged(previous);
+            notifyItemChanged(position);
+            historyFragment.setMap(selected);
         });
     }
 

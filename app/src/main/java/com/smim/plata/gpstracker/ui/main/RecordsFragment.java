@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 
 import com.smim.plata.gpstracker.DataModel;
 import com.smim.plata.gpstracker.MainActivity;
@@ -21,15 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+
 public class RecordsFragment extends Fragment {
 
     TextView distance,time;
     String distanceVal="", timeVal="";
 
-    private PageViewModel pageViewModel;
 
     public static RecordsFragment newInstance(int index) {
         RecordsFragment fragment = new RecordsFragment();
@@ -54,8 +49,6 @@ public class RecordsFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_records, container, false);
-        //distanceVal= "";
-        //timeVal = "";
         distance = root.findViewById(R.id.recordsDistanceValue);
         time = root.findViewById(R.id.recordsTimeValue);
         distance.setText(distanceVal);

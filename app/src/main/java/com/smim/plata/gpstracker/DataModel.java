@@ -1,7 +1,5 @@
 package com.smim.plata.gpstracker;
 
-import android.provider.ContactsContract;
-
 import java.util.ArrayList;
 
 public class DataModel {

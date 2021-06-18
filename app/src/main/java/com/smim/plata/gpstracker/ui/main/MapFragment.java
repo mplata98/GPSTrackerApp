@@ -1,24 +1,18 @@
 package com.smim.plata.gpstracker.ui.main;
 
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -50,7 +44,7 @@ public class MapFragment extends Fragment{
         mMapView.onCreate(savedInstanceState);
         ((MainActivity) getActivity()).setMapFragment(this);
 
-        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.onResume();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -62,16 +56,6 @@ public class MapFragment extends Fragment{
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-
-                // For showing a move to my location button
-                //googleMap.setMyLocationEnabled(true);
-
-                // For dropping a marker at a point on the Map
-                //googleMap.addMarker(new MarkerOptions().position(current).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
-                //CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
-                //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 
@@ -104,7 +88,7 @@ public class MapFragment extends Fragment{
 
     public void updateLocation(double latitude, double longitude){
         this.current = new LatLng(latitude,longitude);
-        if(googleMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+        if(googleMap != null){
             googleMap.clear();
             System.out.println("Map cleared");
             googleMap.addMarker(new MarkerOptions().position(current).title("Marker Title").snippet("Marker Description"));

@@ -39,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        db = FirebaseDatabase.getInstance("https://upheld-castle-311909-default-rtdb.europe-west1.firebasedatabase.app/");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         lastStartingDate="";
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            createSignInIntent();
             return;
         }
 
@@ -100,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         });
 
         createSignInIntent();
-        db = FirebaseDatabase.getInstance("https://upheld-castle-311909-default-rtdb.europe-west1.firebasedatabase.app/");
         currentPath = new HashMap<>();
 
     }
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            lastStartingDate = Calendar.getInstance().getTime().toString();
+            lastStartingDate =  new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
         locationUpdates = !locationUpdates;
@@ -236,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             currentPath = new HashMap<>();
             currentPath.put("path",String.valueOf(path));
             currentPath.put("dateA", lastStartingDate);
-            currentPath.put("dateB", Calendar.getInstance().getTime().toString());
+            currentPath.put("dateB", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(Calendar.getInstance().getTime()));
             userCatalog.push().setValue(currentPath);
             this.recordsFragment.updateRecords(this.historyFragment.list);
         }

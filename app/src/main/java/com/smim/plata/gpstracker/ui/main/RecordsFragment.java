@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -83,13 +84,18 @@ public class RecordsFragment extends Fragment {
     }
 
     public long calculateTimeFromString(String str_date){
-        DateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+        DateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        DateFormat formatter2 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         Date date = null;
 
         try {
             date = (Date) formatter.parse(str_date);
         } catch (ParseException e) {
-            e.printStackTrace();
+            try {
+                date = (Date) formatter2.parse(str_date);
+            } catch (ParseException parseException) {
+                parseException.printStackTrace();
+            }
         }
         return date.getTime();
     }

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "532125978111",
+    "firebase_url": "https://upheld-castle-311909-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "upheld-castle-311909",
     "storage_bucket": "upheld-castle-311909.appspot.com"
   },
@@ -14,11 +15,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "532125978111-9agq5qft1q2g9qb0417n2gr2mfe0ubg3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smim.plata.gpstracker",
+            "certificate_hash": "0ef93c0ee5c17bd626f5c1e3cc43c891b6978472"
+          }
+        },
+        {
           "client_id": "532125978111-mjo9a0g9lg7d7lqgg94osp5k0gh78pqb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.smim.plata.gpstracker",
             "certificate_hash": "5f0b16ad132e36547c279a5751be21b9c4b4c36c"
+          }
+        },
+        {
+          "client_id": "532125978111-tcjro4bht543u6a029qo051vu4h1c2lt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smim.plata.gpstracker",
+            "certificate_hash": "14aba88a4abdf2cec1f0db3bddbf95e78a465e97"
           }
         },
         {

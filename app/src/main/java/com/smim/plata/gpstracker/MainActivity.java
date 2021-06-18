@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,6 +35,8 @@ import com.smim.plata.gpstracker.ui.main.MapFragment;
 import com.smim.plata.gpstracker.ui.main.RecordsFragment;
 import com.smim.plata.gpstracker.ui.main.SectionsPagerAdapter;
 
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -68,16 +71,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public ArrayList<DataModel> tmpList;
     private String lastStartingDate;
     private RecordsFragment recordsFragment;
+    private Bundle savedBundle = new Bundle();
+    private ViewPager viewPager;
+    private TabLayout tabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         db = FirebaseDatabase.getInstance("https://upheld-castle-311909-default-rtdb.europe-west1.firebasedatabase.app/");
         super.onCreate(savedInstanceState);
+        savedBundle=savedInstanceState;
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
+        tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.tracking_button);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -86,25 +93,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         lastStartingDate="";
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+        } else {
+            fab.setOnClickListener(view -> {
+                if (locationUpdates) {
+                    Snackbar.make(view, "Tracking turned OFF", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } else {
+                    Snackbar.make(view, "Tracking turned ON", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                switchLocationUpdates();
+            });
+
             createSignInIntent();
-            return;
+            currentPath = new HashMap<>();
         }
-
-
-        fab.setOnClickListener(view -> {
-            if(locationUpdates){
-                Snackbar.make(view, "Tracking turned OFF", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }else {
-                Snackbar.make(view, "Tracking turned ON", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-            switchLocationUpdates();
-        });
-
-        createSignInIntent();
-        currentPath = new HashMap<>();
-
     }
 
     @Override
@@ -114,6 +117,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         this.mapFragment.updateLocation(latitude, longitude);
         userPath.add(latitude);
         userPath.add(longitude);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101) {
+            System.exit(0);
+        }
     }
 
     public Double[] getLocation() {
@@ -134,13 +145,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             userPath.clear();
         } else {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
                 return;
             }
             lastStartingDate =  new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -240,7 +245,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             currentPath.put("dateA", lastStartingDate);
             currentPath.put("dateB", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(Calendar.getInstance().getTime()));
             userCatalog.push().setValue(currentPath);
-            this.recordsFragment.updateRecords(this.historyFragment.list);
+            if(this.historyFragment!=null){
+                this.recordsFragment.updateRecords(this.historyFragment.list);
+            }
         }
     }
 
